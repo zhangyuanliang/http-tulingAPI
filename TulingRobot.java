@@ -1,34 +1,24 @@
-package com.gentlesoft.robot.tl;
+package test;
 
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.io.PrintWriter;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Map.Entry;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.gentlesoft.commons.util.json.JsonUtil;
-import com.gentlesoft.robot.manager.AskAndAnswerManager;
-import com.gentlesoft.robot.manager.AskNoAnswer;
-import com.gentlesoft.robot.manager.AskSession;
-import com.gentlesoft.robot.rs.answerreslut.AnswerResultBuilders;
-import com.gentlesoft.robot.rs.answerreslut.ReplyAnswerResult;
-
-public class TulingRobot implements AskNoAnswer {
-	private static final Logger logger = LoggerFactory.getLogger(AskAndAnswerManager.class);
-	@Override
-	public ReplyAnswerResult showAnswer(AskSession as, String ask) {
+public class TulingRobot {
+	private static final Logger logger = LoggerFactory.getLogger(TulingRobot.class);
+	public static void getAnswer(String ask) {
 		String requestUrl = "http://www.tuling123.com/openapi/api"; //接口地址
 		String APIKEY = "c34f1de5cad943f4a0e9b8c129e69de7";//图灵服务的钥匙
-		String userId = as.getSessionId();//开发者给自己的用户分配的唯一标志
+		String userId = "userId001";//开发者给自己的用户分配的唯一标志
         Map<String, Object> requestParamsMap = new HashMap<String, Object>();  
         requestParamsMap.put("key", APIKEY);  
         requestParamsMap.put("userid", userId);
@@ -84,16 +74,8 @@ public class TulingRobot implements AskNoAnswer {
 //              responseResult.append("/n").append(line);  
             	responseResult.append(line);
             }  
-            Map<String, Object> resultMap = JsonUtil.jsonToMap(responseResult.toString());
-            
-    		String txt = (String) resultMap.get("text");
-    		ReplyAnswerResult ar = AnswerResultBuilders.txtReplyAnswerResult();
-    		ar.setAnswerFormatTxt(txt);
-    		ar.setAnswerTxt(txt);
-    		ar.setSessionId(as.getSessionId());
-    		ar.setOriginalAsk(ask);
-    		
-    		return ar;
+//          Map<String, Object> resultMap = JsonUtil.jsonToMap(responseResult.toString());
+            System.out.println("接口返回答案："+responseResult.toString());
         } catch (Exception e) {  
         	logger.error("send post request error!" + e);  
         } finally {  
@@ -109,7 +91,9 @@ public class TulingRobot implements AskNoAnswer {
                 ex.printStackTrace();  
             }  
         }
-		return null; 
+	}
+	public static void main(String[] args) {
+		getAnswer("你叫什么？");
 	}
 
 }
